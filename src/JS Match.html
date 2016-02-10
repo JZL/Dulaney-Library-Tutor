@@ -1,0 +1,188 @@
+<script>
+$(function() {
+    console.log("ready!");
+    google.script.run.withSuccessHandler(buildNeededTutee).getTutees()
+    google.script.run.withSuccessHandler(showOptions).matchTutee()
+});
+
+function buildNeededTutee(subjs) {
+    console.log("buildNeeded")
+    console.log(subjs)
+    $("#tutees").html("<ul>"+subjs+"</ul>")
+}
+
+function showOptions(arrReturned) {
+    //needs to be global for submit
+    console.log(arrReturned)
+    var  matched = arrReturned[0]
+    var errorMsg = arrReturned[1]
+    $("#errorMsg").html(errorMsg)
+    //    matched = matched
+    console.log("Showotpions")
+    console.log("matched: " + JSON.stringify(matched))
+    for (var i in matched) {
+        //console.log("Matched: "+i)
+        $("#matches").append("<br>" + i + "<br>")
+        var prevSubj = [0, ""]
+        for (var q in matched[i]) {
+            //        console.log("W/IN: "+q)
+            //        console.log(JSON.stringify(prevSubj))
+            //if subj = prevSubj
+            console.log("prev " + prevSubj[1])
+            if (matched[i][q][2] == prevSubj[1]) {
+                prevSubj[1] = matched[i][q][2]
+                console.log("Radio")
+                $("#" + ((i + (q - 1)).replace(/\s/g, ""))).remove()
+                $('label[for=' + ((i + (q - 1)).replace(/\s/g, "")) + ']').css(
+                    "color", "red").remove()
+                console.log((i + matched[i][q][2]).replace(/\s/g, ""))
+                $("#matches").append(
+                        "<input type='radio'                  tuteenum = '" +
+                        i + "' tutornum='" + (q - 1) + "' name='" + (i +
+                            matched[i][q - 1][2]).replace(/\s/g, "") +
+                        "' id='" + (i + (q - 1)).replace(/\s/g, "") +
+                        "'><label for='" + (i + (q - 1)).replace(/\s/g, "") +
+                        "'>" + matched[i][q - 1][1] + " in " + matched[i][q -
+                            1][2] + " during " + matched[i][q - 1][3] +
+                        "</input><br>")
+                    //                  $("#matches").append("<input type='radio' checked='true' tuteenum = '"+i+"' tutornum='"+(q-1)+"' name='"+(i+matched[i][q-1][2]).replace(/\s/g, "")+"' id='"+(i+(q-1)).replace(/\s/g, "")+"'><label for='"+(i+(q-1)).replace(/\s/g, "")+"'>"+matched[i][q-1][1]+" in "+matched[i][q-1][2]+" during "+matched[i][q-1][3]+"</input><br>")
+                    //Deserves a radio button and change prev to radio from checkbox
+                $("#matches").append("<input type='radio' tuteenum = '" + i +
+                    "' tutornum='" + q + "' name='" + (i + matched[i][q]
+                        [2]).replace(/\s/g, "") + "' id='" + (i + q).replace(
+                        /\s/g, "") + "'><label for='" + (i + q).replace(
+                        /\s/g, "") + "'>" + matched[i][q][1] + " in " +
+                    matched[i][q][2] + " during " + matched[i][q][3] +
+                    "</input><br><br>")
+            } else {
+                console.log("else")
+                prevSubj[1] = matched[i][q][2]
+                console.log((i + matched[i][q][2]).replace(/\s/g, ""))
+                    //    $("#matches").append("<input type='checkbox' checked='true' tuteenum = '"+i+"' tutornum='"+q+"'  name='"+(i+matched[i][q][2]).replace(/\s/g, "")+"'  id='"+(i+q).replace(/\s/g, "")+"'><label for='"+(i+q).replace(/\s/g, "")+"'>"+matched[i][q][1]+" in "+matched[i][q][2]+" during "+matched[i][q][3]+"</input><br>")            
+                $("#matches").append(
+                    "<input type='checkbox'                tuteenum = '" +
+                    i + "' tutornum='" + q + "'  name='" + (i + matched[
+                        i][q][2]).replace(/\s/g, "") + "'  id='" + (i +
+                        q).replace(/\s/g, "") + "'><label for='" + (i +
+                        q).replace(/\s/g, "") + "'>" + matched[i][q][1] +
+                    " in " + matched[i][q][2] + " during " + matched[i]
+                    [q][3] + "</input><br>")
+            }
+        }
+    }
+//    $('input[type="radio"]').off('click').on('click', function() {
+//  if ($(this).data('checked')) {
+//    $(this).removeAttr('checked');
+//    $(this).data('checked', false);
+////    $("[name=luciaqianAlgebra2]")
+//  } else {
+//    $(this).data('checked', true);
+//  }
+//});
+    $("#test").click(function() {
+            startSub(matched)
+        })
+        
+//        $("#sub").click(function() {
+//            submitall(matched)
+//        })
+        //console.log($("#matches").html())
+}
+
+function alertAfterMatches(e) {
+    console.log("returned " + e)
+    document.getElementById("sub").innerText="Done Submitting"
+    if (e != "Perfect") {
+alert(e)
+    }
+    //TD
+    //    $(':input').not(':button, :submit, :reset, :hidden').removeAttr('checked').removeAttr('selected').not(':checkbox, select').val('').removeAttr('value');
+}
+
+function startSub(matched) {
+    console.log("Sumbitting")
+        //console.log("matched")
+        //console.log(JSON.stringify(matched))
+    var allOutarr = []
+    //keep outArr global
+    var allChecked = $("#matches input:checked").each(function() {
+        //console.log(this.attributes.tuteenum.value)
+        console.log(this)
+        var tutorNum = parseFloat(this.attributes.tutornum.value)
+        var tuteeName = this.attributes.tuteenum.value
+        allOutarr.push([tuteeName, matched[tuteeName][tutorNum][1],
+            matched[tuteeName][tutorNum][2], matched[
+                tuteeName][tutorNum][3]])
+                console.log(allOutarr)
+    })
+    
+    console.log(JSON.stringify(allOutarr))
+            google.script.run.withSuccessHandler(TellBadMatches).checkMatches(allOutarr)
+}
+
+function TellBadMatches(e){
+console.log(e)
+if(e[0] == ""){
+console.log("No Errors Submitting Perfectly")
+$("#checkMatches").html("No Errors")
+$("#sub").show()
+}else{
+$("#checkMatches").html(e[0])
+$("#sub").show()
+
+}
+
+//clear previous onclick event in case press testMatches twice
+$("#sub").unbind('click')
+$("#sub").click(function(){
+ google.script.run.withSuccessHandler(alertAfterMatches).submitMatches(e[1])
+ console.log("submitting")
+document.getElementById("sub").innerText="Submitting"
+})
+
+}
+function getAlert(returned) {
+    console.log("Rreturned: " + returned)
+    if (returned != "Perfect") {
+        alert(returned)
+    }
+}
+
+function getAlertEmail(returned) {
+    console.log(returned)
+    if (returned != "Nothing") {
+       console.log("rreturned "+returned)
+    }
+}
+
+function sumbitEmail() {
+    //    console.log(parseFloat($("#eventnum").val()))
+    var secretCode = $("#secretcodeInput").val()
+    var email = $("#email").val()
+    console.log(email)
+    var re =
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    console.log(re.test(email))
+    if (!/^[A-z][0-9][A-z]$/.test(secretCode) || !re.test(email)) {
+        alert(
+            "Double Check that the code is right and the email is a valid email"
+        )
+    } else {
+        google.script.run.withSuccessHandler(getAlertEmail).doEmail(email,
+            secretCode)
+        setTimeout(function() {
+            $("#secretcodeDiv").hide()
+            $("#secretcodeInput").val("")
+            $("#email").val("")
+                //setTimeout(function(){
+                //document.getElementById("tags").focus()
+                //document.getElementById("tags").click()
+                ////        $("#tags").focus()
+                ////        $("#tags").click()
+                //}, 100)
+            $("#lastMember").html($("#tags").val())
+            $("#tags").val("")
+        }, 500)
+    }
+}
+</script>

@@ -1,0 +1,156 @@
+<script>
+$(function() {
+    console.log("ready!");
+
+    $("#sub").click(function() {
+        submitall()
+    })
+
+    $("#allDays").click(function() {
+        // Iterate each checkbox
+        $('#date input[type="checkbox"]').each(function() {
+        this.checked = true;
+        });
+
+    })
+    
+    google.script.run.withSuccessHandler(function(allArr) {
+    console.log(allArr)
+        var optionHmrm = '';
+        var checkboxSubj = ''
+        for(var o in allArr[1]){
+        //subjarr
+        optionHmrm +='<option value="'+ allArr[1][o] + '">' + allArr[1][o] + '</option>'
+        }
+        console.log(optionHmrm)
+        for(var r in allArr[0]){
+        checkboxSubj +=
+                    "<label><input type='checkbox' name='subj' value='" +
+                    allArr[0][r] + "'>" + allArr[0][r] + "</label><br>"
+        }
+        $('#hmrm').append(optionHmrm);
+        $("#subj").append(checkboxSubj);
+    }).getHmrmAndSubj();
+    
+});
+
+    //TD Delete, testing
+//    $("#name").val("Jonah Lang")
+//    $("#email").val("jonahmail1@gmail.com")
+//    $("#hmrm").val("Mitchell")
+//    $("#mphone").val("4109785096")
+//    $("#hphone").val("4106669890")
+//    $('#date input[type="checkbox"]').eq(4).prop("checked", true)
+//    $('#subj input[type="checkbox"]').eq(4).prop("checked", true)
+
+
+
+function submitall() {
+    console.log("Sumbitting")
+    var emailRe = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var daysChecked = $('#date input[type="checkbox"]:checked').map(function() {
+        return this.value;
+    }).get()
+    console.log(daysChecked)
+    var subjChecked = $('#subj input[type="checkbox"]:checked').map(function() {
+        return this.value;
+    }).get()
+    console.log(subjChecked)
+    if ($("#name").val() == "" || $("#name").val().indexOf(" ") == -1) {
+        alert("Please Fill in a Name(First and Last)")
+        return
+    }
+//    if ($("#email").val() != "" && emailRe.test($("#email").val()) == false) {
+//        alert("Please Fill in a Valid Email")
+//        return
+//    }
+    if ($("#hmrm").val() == ""||$("#hmrm").val() == "Please Fill In Homeroom") {
+        alert("Please Fill in a Homeroom Teacher")
+        return
+    }
+//    if ($("#mphone").val() == ""||$("#hphone").val() == "") {
+//        alert("Please Fill in both phones")
+//        return
+//    }
+    if (daysChecked.length == 0) {
+        alert("Please Fill in a Day You're Available")
+        return
+    }
+
+    if (subjChecked.length == 0) {
+        alert("Please Fill in a Subject You Want to be Tutored in")
+        return
+    }
+
+    console.log("Going through")
+        //Name, email, mphone, honehmrm, datearr, subjarr
+    google.script.run.withSuccessHandler(getAlert).subToGoogle("Tutee", $("#name").val().replace("'", "").toLowerCase(), $("#email").val(), $("#mphone").val(), $("#hphone").val(),$("#hmrm").val(), JSON.stringify(daysChecked), JSON.stringify(subjChecked))
+        //    console.log(parseFloat($("#eventnum").val()))
+        //    var eventnum = parseFloat($("#eventnum").val())
+        //    if (isNaN(eventnum)) {
+        //        alert(
+        //            "Please Fill Out Event Number(check spreadsheet or List at Bottom(reupdates on refresh))"
+        //        )
+        //    } else {
+        //        google.script.run.withSuccessHandler(getAlert).console($("#tags").val()
+        //            .toLowerCase(), eventnum)
+        //        setTimeout(function() {
+        //            $("#lastMember").html($("#tags").val())
+        //            $("#tags").val("")
+        //            $("#secretcodeDiv").hide()
+        //        }, 500)
+        //    }
+}
+
+
+function getAlert(returned) {
+    console.log("Returned: " + returned)
+    if (returned != "Perfect") {
+        alert(returned)
+    }
+   $(':input').not(':button, :submit, :reset, :hidden').removeAttr('checked').removeAttr('selected').not(':checkbox, select').val('').removeAttr('value');
+   $("#hmrm").val("Please Fill In Homeroom")
+    
+}
+
+
+
+function getAlertEmail(returned) {
+    console.log(returned)
+    if (returned != "Nothing") {
+       console.log(returned)
+    }
+
+}
+
+function sumbitEmail() {
+    //    console.log(parseFloat($("#eventnum").val()))
+    var secretCode = $("#secretcodeInput").val()
+    var email = $("#email").val()
+    console.log(email)
+    var re =
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    console.log(re.test(email))
+    if (!/^[A-z][0-9][A-z]$/.test(secretCode) || !re.test(email)) {
+        alert(
+            "Double Check that the code is right and the email is a valid email"
+        )
+    } else {
+        google.script.run.withSuccessHandler(getAlertEmail).doEmail(email,
+            secretCode)
+        setTimeout(function() {
+            $("#secretcodeDiv").hide()
+            $("#secretcodeInput").val("")
+            $("#email").val("")
+                //setTimeout(function(){
+                //document.getElementById("tags").focus()
+                //document.getElementById("tags").click()
+                ////        $("#tags").focus()
+                ////        $("#tags").click()
+                //}, 100)
+            $("#lastMember").html($("#tags").val())
+            $("#tags").val("")
+        }, 500)
+    }
+}
+</script>

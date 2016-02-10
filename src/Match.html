@@ -1,0 +1,45 @@
+<html>
+<head>
+<!--
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+-->
+<?!= include('jquery'); ?>
+<?!= include('ui'); ?>
+<?!= include('uiCss'); ?>
+
+<?!= include('JS Match'); ?>
+
+</head>
+<body>
+<b>Match</b><br><br>
+<?var url = getScriptUrl();?><a href='<?=url?>?page=Tutee'> <input type='button' name='button' value='Tutee Signup'></a>
+    <?var url = getScriptUrl();?><a href='<?=url?>?page=Tutor'> <input type='button' name='button' value='Tutor Signup'></a>
+<div class="ui-widget">
+<div id="all">
+<div id="errorMsg" style="color:coral;font-weight:bold;font-size:30px">
+</div>
+Maximum Number of Tutees per Tutor (in below match):
+<input type="text" id="maxNumTutees" value="2"><br><br>
+<b><u>
+Tutees Needed To Be Matched
+</b></u><br>
+<div id="tutees">
+</div>
+<br><br>
+Finalized? Tutee Matches
+<br>
+<div id="matches">
+
+</div>
+<button id="test">Test Matches</button>
+<div id="checkMatches" style="color:red;"></div>
+<button id="sub" style="display:none;">Submit</button>
+<!--<br><br><br><i><div id="lastMember"><div id="package"></div></div><div id="secretcodeDiv" style="display: none;"><input id="secretcodeInput"><input id="email"><div id="lastCode"></div></div></i><br><br>-->
+<!--<a href="https://docs.google.com/forms/d/1eIpy0BEkxAG3DR2FBkyDPK0ClpvCGY2kPVTJiuklJIk/viewform">Separate Form to add Email address if new user</a>-->
+</div>
+</div>
+</body>
+</html>

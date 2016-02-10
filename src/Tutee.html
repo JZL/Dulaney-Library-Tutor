@@ -1,0 +1,69 @@
+<html>
+<head>
+<!--
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+-->
+<?!= include('jquery'); ?>
+<?!= include('ui'); ?>
+<?!= include('uiCss'); ?>
+
+<?!= include('JS Tutee'); ?>
+
+</head>
+<body>
+<b>TUTEE SIGNUP</b><br><br>
+    <?var url = getScriptUrl();?><a href='<?=url?>?page=Tutor'> <input type='button' name='button' value='Tutor Signup'></a>
+    <?var url = getScriptUrl();?><a href='<?=url?>?page=Match'> <input type='button' name='button' value='Match'></a>
+    <!--<?var url = getScriptUrl();?><a href='<?=url?>?page=Tutor'> <input type='button' name='button' value='Tutor Signup'></a>-->
+<div class="ui-widget">
+<div id="all">
+<form id="allForm">
+<label for="name">Name of Tuttee: </label>
+<input type="text" id="name" class="glowing-border"/><br><br>
+
+<label for="email">Email of Student: </label>
+<input type="text"  id="email" class="glowing-border"/><br><br>
+
+<label for="mphone">Mobile Phone of Student: </label>
+<input id="mphone"  type="text" class="glowing-border"/><br>
+
+<label for="hphone">Home Phone of Student: </label>
+<input id="hphone"   type="text" class="glowing-border"/><br><br>
+
+
+Homeroom teacher(Last Name):
+<select id="hmrm">
+<option value="Please Fill In Homeroom">Please Fill In Homeroom</option>
+</select><br><br>
+Days Available:<br><button id="allDays">Available All Days</button><br>
+<div id="date">
+<label><input type="checkbox" name="days" value="Monday AM">Monday AM</label>
+<label><input type="checkbox" name="days" value="Tuesday AM">Tuesday AM</label>
+<label><input type="checkbox" name="days" value="Wednesday AM">Wednesday AM</label>
+<label><input type="checkbox" name="days" value="Thursday AM">Thursday AM</label>
+<label><input type="checkbox" name="days" value="Friday AM">Friday AM</label>
+<br>
+<label><input type="checkbox" name="days" value="Monday PM">Monday PM</label>
+<label><input type="checkbox" name="days" value="Tuesday PM">Tuesday PM</label>
+<label><input type="checkbox" name="days" value="Wednesday PM">Wednesday PM</label>
+<label><input type="checkbox" name="days" value="Thursday PM">Thursday PM</label>
+<label><input type="checkbox" name="days" value="Friday PM">Friday PM</label>
+</div>
+<br><br>
+<!--<button id="allSubj"><Button><br>-->
+Subjects
+<div id="subj">
+<!--input type="checkbox" name="subj" value="Bike">I have a bike<br>-->
+</div><br><br>
+<button type="submit" id="sub">Submit</button>
+</form>
+
+<!--<br><br><br><i><div id="lastMember"><div id="package"></div></div><div id="secretcodeDiv" style="display: none;"><input id="secretcodeInput"><input id="email"><div id="lastCode"></div></div></i><br><br>-->
+<!--<a href="https://docs.google.com/forms/d/1eIpy0BEkxAG3DR2FBkyDPK0ClpvCGY2kPVTJiuklJIk/viewform">Separate Form to add Email address if new user</a>-->
+</div>
+</div>
+</body>
+</html>
